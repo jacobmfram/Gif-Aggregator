@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <link rel="stylesheet" href="boostrap-style.css">
+</head>
+<body>
+  <div id="container-fluid">
+    <div class="jumbotron">
+        <h1 class="display-4">Gif Collector</h1>
+        <p class="lead">Search for whatever you want to find related gifs.</p>
+        <hr class="my-4">
+        <p>There are a few buttons to start you off, but let your imagination run wild!</p>
+        <p class="instruction">Your search will be saved as a button for quick loading.</p>
+        <p class="instruction">Click any gif to pause or play it.</p>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-7">
+            <div id="buttons"></div>
+        </div>
+        <div class="col-3">
+            <div id="search-area">
+                <form><input type="text" id="search"></form>
+                <br>
+                <button type="button" class="btn btn-success" id="go">Search</button>
+            </div>
+        </div>
+        <div class="col-1"></div>     
+    </div>
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-10" id="gifs">
+            <div class="gif-card" id="gif-0"></div>
+            <div class="gif-card" id="gif-1"></div>
+            <div class="gif-card" id="gif-2"></div>
+            <div class="gif-card" id="gif-3"></div>
+            <div class="gif-card" id="gif-4"></div>
+            <div class="gif-card" id="gif-5"></div>
+            <div class="gif-card" id="gif-6"></div>
+            <div class="gif-card" id="gif-7"></div>
+            <div class="gif-card" id="gif-8"></div>
+            <div class="gif-card" id="gif-9"></div>
+        </div>
+    <div class="col-1"></div>
+    </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript">
+
+  var searchTerm = "";
+  var currentButtons = ["cat", "dog", "mouse"];
+
+  $(document).ready(function(){
+      for(i = 0; i < currentButtons.length; i++) {
+        $("#buttons").append("<button type='button' class='btn btn-success' id='animal' data='" + currentButtons[i] + "'>" + currentButtons[i] + "</button>");
+      }
+  });
+
+  $(document.body).on("click", "#go", function(){
+    currentButtons.push(searchTerm);
+    searchTerm = $("#search").val().trim();
+    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + searchTerm + "&api_key=INcD521SBR4rgpxc3poNCp8Qmd4ziGRh&limit=10";
+    $("input").val("");
+    $.ajax({
+      url: queryURL,
+      method: "GET"
+    }).then(function(response){
+      if(currentButtons.indexOf(searchTerm) === -1) {
+        $("#buttons").append("<button type='button' class='btn btn-success' id='animal' data='" + searchTerm + "'>" + searchTerm + "</button>");
+
+      for(i = 0; i < 10; i++){
+        $("#gif-" + i).html("<div class='card' style='width: 18rem;'><img class='card-img-top' src='" + response.data[i].images.fixed_height_small.url + "' data-still='" + response.data[i].images.fixed_height_small_still.url + "' data-animate='" + response.data[i].images.fixed_height_small.url + "' data-state='animate' alt='Card image cap'><div class='card-body'><p class='card-text'>Rating: " + response.data[i].rating + "</p></div></div>");
+
+      } 
+      } else {
+        for(i = 0; i < 10; i++){
+            $("#gif-" + i).html("<div class='card' style='width: 18rem;'><img class='card-img-top' src='" + response.data[i].images.fixed_height_small.url + "' data-still='" + response.data[i].images.fixed_height_small_still.url + "' data-animate='" + response.data[i].images.fixed_height_small.url + "' data-state='animate' alt='Card image cap'><div class='card-body'><p class='card-text'>Rating: " + response.data[i].rating + "</p></div></div>");
+        }
+      }
+    });  
+  });
+
+  $(document.body).on("click", "#animal", function(){
+    var buttonSearch = $(this).attr("data");
+    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + buttonSearch + "&api_key=INcD521SBR4rgpxc3poNCp8Qmd4ziGRh&limit=10";
+    $.ajax({
+      url: queryURL,
+      method: "GET"
+    }).then(function(response) {
+        for(i = 0; i < 10; i++){
+            $("#gif-" + i).html("<div class='card' style='width: 18rem;'><img class='card-img-top' src='" + response.data[i].images.fixed_height_small.url + "' data-still='" + response.data[i].images.fixed_height_small_still.url + "' data-animate='" + response.data[i].images.fixed_height_small.url + "' data-state='animate' alt='Card image cap'><div class='card-body'><p class='card-text'>Rating: " + response.data[i].rating + "</p></div></div>");
+        }
+    });
+  });
+
+  $(document.body).on("click", "img", function(){
+    if($(this).attr("data-state") === 'animate') {
+        $(this).attr("src", $(this).attr('data-still'));
+        $(this).attr("data-state", "still");
+    } else {
+        $(this).attr("src", $(this).attr('data-animate'));
+        $(this).attr("data-state", "animate");
+    }
+  });
+
+  </script>
+</body>
+</html>
+
+

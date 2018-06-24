@@ -1,0 +1,43 @@
+body {
+    background-color: antiquewhite;
+}
+
+.gif-card {
+    float: left;
+    margin: 5px;
+}
+
+.btn-success {
+    margin: 5px;
+}
+
+#gifs {
+    margin-top: 25px;
+}
+
+#container-fluid {
+    background-color: antiquewhite;
+}
+
+.jumbotron {
+    background-color: antiquewhite;
+
+}
+
+.instruction {
+    font-size: 12px !important;
+
+}
+
+p, h1 {
+    text-align: center;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+p {
+    font-size: 16px;
+}
+
+.card-body, img {
+    border: 1px solid #28a745;
+}
